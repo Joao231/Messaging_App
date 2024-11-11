@@ -1,0 +1,33 @@
+services:
+  app:
+    build: .
+    container_name: flask_chat_app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    environment:
+      - FLASK_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/chat_db
+      - SECRET_KEY=mongo_secret_key
+    volumes:
+      - .:/app
+    networks:
+      - app_network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    networks:
+      - app_network
+    volumes:
+      - mongo_data:/data/db
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  mongo_data:
